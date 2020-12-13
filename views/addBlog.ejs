@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/vendors/css/bootstrap.css">
+    <script src="/vendors/js/angular.js"></script>
+</head>
+<body>
+    <div class="container" ng-app="blogApp" ng-controller="blogController">
+        <h1>Create New Blog</h1>
+        <form ng-submit="submitBlogDetails()">
+            <div class="form-group">
+                <input type="text" ng-model="blog.title" placeholder="Blog Title" class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="file" onchange="angular.element(this).scope().uploadFile()" id="largeImage" placeholder="Upload BLog Image" class="form-control">
+            <span style="color:{{uploadStatus.color}}">{{uploadStatus.status}}</span>
+            </div>
+            <div class="form-group">
+                <textarea ng-model="blog.article" placeholder="Blog Article" class="form-control" rows="20"></textarea>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary btn-block">SUBMIT</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var app = angular.module('blogApp', []);
+        app.controller('blogController', function($scope, $http){
+
+            $scope.blog = {};
+
+            $scope.uploadStatus = {};
+
+            $scope.submitBlogDetails = function(){
+                console.log($scope.blog);
+                $http({
+                    url:"<%= usefuls.url.apiUrl %>/uploadBlog",
+                    method:"POST",
+                    data:$scope.blog,
+                    headers:{"Content-Type":"application/json"}
+                }).then(function successCallback(res){
+                    console.log(res);
+                }, function errorCallback(err){
+                    console.log(err);
+                });
+            }
+           
+            $scope.uploadFile = function(){
+                $scope.uploadStatus = {
+                    color:"red",
+                    status:"Uploading..."
+                };
+                var files = document.getElementById('largeImage').files[0];
+                var fd = new FormData();
+                fd.append('uploads', files);
+                $http({
+                    url:"<%= usefuls.url.apiUrl %>/uploadBlogImage",
+                    method:"POST",
+                    data:fd,
+                    headers:{
+                        'Content-Type': undefined
+                    }
+                }).then(function successCallback(res){
+                    $scope.uploadStatus = {
+                    color:"green",
+                    status:"Uploaded!"
+                };
+                    $scope.blog.blogImagePath = res.data.filePath;
+                    console.log(res);
+                },function errorCallback(err){
+                    console.log(err);
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>
