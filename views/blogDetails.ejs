@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/vendors/css/bootstrap.css">
+    <script src="/vendors/js/angular.js"></script>
+    <style>
+        .blogImage{
+            height: 450px;
+            background-size: cover;
+            background-position:center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title"><h4><%= usefuls.bdetails.title %></h4></div>
+                <div class="row">
+                    <div class="col-12 blogImage" style="background-image:url(<%= usefuls.url.viewUrl+usefuls.bdetails.blogImagePath %>)"></div>
+                    <div class="col-12 " style="margin-top: 10px;"><%= usefuls.bdetails.article %></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

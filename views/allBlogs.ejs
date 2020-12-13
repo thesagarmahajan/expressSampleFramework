@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/vendors/css/bootstrap.css">
+    <script src="/vendors/js/angular.js"></script>
+    <style>
+        .blogimage{
+            background-size: cover;
+            height:100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" ng-app="allBlogsApp" ng-controller="allBlogsCtrl">
+        <h1>All Blogs</h1>
+        <div class="row" >
+            <div class="col-12" style="padding-top:10px;" ng-repeat="blog in blogs">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title"><h5>{{blog.title}}</h5></div>
+                        <div class="row">
+                            <div class="col-4 blogimage" style="background-image:url(<%= usefuls.url.viewUrl %>{{blog.blogImagePath}})"></div>
+                            <div class="col-8">{{articleThumbnail(blog.article)}} <a href="<%= usefuls.url.viewUrl %>/blogDetails/{{blog._id}}">Read More...</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var app = angular.module('allBlogsApp', []);
+        app.controller('allBlogsCtrl', function($http, $scope){
+
+            $scope.articleThumbnail = function(article){
+                
+                article = article.substring(0, 130);
+                
+                return article+"...";
+            }
+
+            $http({
+                url:"<%= usefuls.url.apiUrl %>/allBlogs",
+                method:"GET"
+            }).then(function successCallback(res){
+                $scope.blogs = res.data;
+                console.log(res);
+            }, function errorCallback(err){
+                console.log(err);
+            });
+
+        });
+    </script>
+</body>
+</html>
